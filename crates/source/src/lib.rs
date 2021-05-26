@@ -1,7 +1,10 @@
 pub mod tukui;
 
-pub(crate) struct Addon {}
-pub(crate) trait Source {
+#[derive(Clone, Debug)]
+pub struct Addon {
+    pub name: String,
+}
+pub trait Source {
     fn get_addons(&self) -> Result<Vec<Addon>, SourceError>;
 }
 

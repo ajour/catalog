@@ -1,4 +1,5 @@
 use source::tukui::Tukui;
+use source::Source;
 use structopt::StructOpt;
 
 fn main() {
@@ -6,8 +7,8 @@ fn main() {
     match opts.command {
         Command::Catalog => {
             let tuk = Tukui {};
-            // tuk.get_addons();
-            dbg!("doing catalog");
+            let addons = tuk.get_addons().unwrap();
+            dbg!("tukui addons: {}", addons);
         }
     }
 }
