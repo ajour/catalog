@@ -1,14 +1,9 @@
 [package]
-name = "catalog"
+name = "cli"
 version = "0.1.0"
 authors = ["Casper Rogild Storm"]
 edition = "2018"
 
-[workspace]
-members = [
-    ".",
-    "crates/cli",
-    "crates/source"
-]
-
 [dependencies]
+source = { path = "../source" }
+structopt = "0.3.21"
