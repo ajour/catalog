@@ -7,3 +7,4 @@ edition = "2018"
 [dependencies]
 source = { path = "../source" }
 structopt = "0.3.21"
+futures = "0.3.15"

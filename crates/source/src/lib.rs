@@ -1,11 +1,14 @@
+use async_trait::async_trait;
+
 pub mod tukui;
 
 #[derive(Clone, Debug)]
 pub struct Addon {
     pub name: String,
 }
+#[async_trait]
 pub trait Source {
-    fn get_addons(&self) -> Result<Vec<Addon>, SourceError>;
+    async fn get_addons(&self) -> Result<Vec<Addon>, SourceError>;
 }
 
 #[derive(thiserror::Error, Debug)]
