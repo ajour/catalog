@@ -9,11 +9,11 @@ pub struct Addon {
 }
 #[async_trait]
 pub trait Source {
-    async fn get_addons(&self) -> Result<Vec<Addon>, SourceError>;
+    async fn get_addons(&self) -> Result<Vec<Addon>, Error>;
 }
 
 #[derive(thiserror::Error, Debug)]
-pub enum SourceError {
+pub enum Error {
     #[error(transparent)]
     Isahc(#[from] isahc::Error),
     #[error(transparent)]

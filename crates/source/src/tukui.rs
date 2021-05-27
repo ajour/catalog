@@ -5,7 +5,20 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
 struct Package {
+    id: String,
     name: String,
+    small_desc: String,
+    author: String,
+    version: String,
+    screenshot_url: String,
+    url: String,
+    category: String,
+    downloads: String,
+    lastupdate: String,
+    patch: String,
+    web_url: String,
+    last_download: String,
+    // changelog: String,
 }
 
 impl From<Package> for Addon {
@@ -18,10 +31,11 @@ pub struct Tukui {}
 
 #[async_trait]
 impl Source for Tukui {
-    async fn get_addons(&self) -> Result<Vec<Addon>, SourceError> {
+    async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
         let mut response =
             isahc::get_async("https://www.tukui.org/api.php?classic-tbc-addons=all").await?;
         let packages = response.json::<Vec<Package>>().await?;
+        println!("packages: {:?}", packages);
         let addons = packages.into_iter().map(Addon::from).collect();
         Ok(addons)
     }
