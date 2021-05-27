@@ -7,9 +7,10 @@ pub struct Tukui {}
 impl Source for Tukui {
     async fn get_addons(&self) -> Result<Vec<Addon>, SourceError> {
         // Convert isahc error -> sourceerror.
-        let response =
-            isahc::get_async("https://www.tukui.org/api.php?classic-tbc-addons=all").await;
-        println!("{:?}", response.unwrap().text().await);
-        Ok(vec![])
+        let mut response =
+            isahc::get_async("https://www.tukui.org/api.php?classic-tbc-addons=all").await?;
+
+        let addons = response.json::<Vec<Addon>>().await?;
+        Ok(addons)
     }
 }

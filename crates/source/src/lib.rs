@@ -1,8 +1,9 @@
 use async_trait::async_trait;
+use serde::{Deserialize, Serialize};
 
 pub mod tukui;
 
-#[derive(Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Addon {
     pub name: String,
 }
@@ -13,6 +14,12 @@ pub trait Source {
 
 #[derive(thiserror::Error, Debug)]
 pub enum SourceError {
+    #[error(transparent)]
+    Isahc(#[from] isahc::Error),
+    #[error(transparent)]
+    Http(#[from] isahc::http::Error),
+    #[error(transparent)]
+    SerdeJson(#[from] serde_json::Error),
     #[error("unknown error")]
     Unknown,
 }
