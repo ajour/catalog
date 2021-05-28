@@ -14,6 +14,24 @@ pub enum Flavor {
     ClassicBeta,
 }
 
+impl std::fmt::Display for Flavor {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Flavor::Retail => "retail",
+                Flavor::RetailPtr => "retail_ptr",
+                Flavor::RetailBeta => "retail_beta",
+                Flavor::ClassicEra => "classic_era",
+                Flavor::ClassicTbc => "classic_tbc",
+                Flavor::ClassicBeta => "classic_beta",
+                Flavor::ClassicPtr => "classic_ptr",
+            }
+        )
+    }
+}
+
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Version {
     pub flavor: Flavor,
