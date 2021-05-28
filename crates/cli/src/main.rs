@@ -1,6 +1,6 @@
 use futures::executor::block_on;
 use source::tukui::Tukui;
-use source::{Error, Source};
+use source::{Error, Flavor, Source};
 use structopt::StructOpt;
 
 fn main() {
@@ -13,7 +13,7 @@ async fn handle_opts() -> Result<(), Error> {
     match opts.command {
         Command::Catalog => {
             let tuk = Tukui {};
-            let addons = tuk.get_addons().await?;
+            let addons = tuk.get_addons(Flavor::ClassicTbc).await?;
             dbg!("tukui addons: {}", addons);
             Ok(())
         }

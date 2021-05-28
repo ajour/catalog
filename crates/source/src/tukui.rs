@@ -23,7 +23,10 @@ struct Package {
 
 impl From<Package> for Addon {
     fn from(item: Package) -> Self {
-        Addon { name: item.name }
+        Addon {
+            id: item.id.parse().unwrap(),
+            name: item.name,
+        }
     }
 }
 
@@ -31,11 +34,10 @@ pub struct Tukui {}
 
 #[async_trait]
 impl Source for Tukui {
-    async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
+    async fn get_addons(&self, flavor: Flavor) -> Result<Vec<Addon>, Error> {
         let mut response =
             isahc::get_async("https://www.tukui.org/api.php?classic-tbc-addons=all").await?;
         let packages = response.json::<Vec<Package>>().await?;
-        println!("packages: {:?}", packages);
         let addons = packages.into_iter().map(Addon::from).collect();
         Ok(addons)
     }
