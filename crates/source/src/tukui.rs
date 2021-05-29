@@ -3,17 +3,12 @@ use async_trait::async_trait;
 use isahc::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Clone, Debug)]
-struct Container {
-    flavor: Flavor,
-    package: Package,
-}
-
-impl From<Container> for Addon {
-    fn from(container: Container) -> Self {
+impl From<(Package, Flavor)> for Addon {
+    fn from(pair: (Package, Flavor)) -> Self {
+        let (package, _flavor) = pair;
         Addon {
-            id: container.package.id.parse().unwrap(),
-            name: container.package.name,
+            id: package.id.parse().unwrap(),
+            name: package.name,
         }
     }
 }
@@ -44,11 +39,10 @@ impl Source for Tukui {
         let mut response =
             isahc::get_async("https://www.tukui.org/api.php?classic-tbc-addons=all").await?;
         let packages = response.json::<Vec<Package>>().await?;
-        let packages = packages
+        let addons = packages
             .into_iter()
-            .map(|package| Container { flavor, package })
-            .collect::<Vec<Container>>();
-        let addons = packages.into_iter().map(Addon::from).collect();
+            .map(|package| Addon::from((package, flavor)))
+            .collect();
         Ok(addons)
     }
 }
