@@ -32,6 +32,17 @@ impl std::fmt::Display for Flavor {
     }
 }
 
+impl Flavor {
+    /// Returns `Flavor` which self relates to.
+    pub fn base_flavor(self) -> Flavor {
+        match self {
+            Flavor::Retail | Flavor::RetailPtr | Flavor::RetailBeta => Flavor::Retail,
+            Flavor::ClassicTbc | Flavor::ClassicPtr | Flavor::ClassicBeta => Flavor::ClassicTbc,
+            Flavor::ClassicEra => Flavor::ClassicEra,
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Version {
     pub flavor: Flavor,
@@ -41,13 +52,13 @@ pub struct Version {
 pub struct Addon {
     pub id: u32,
     pub name: String,
-    // pub url: String,
-    // pub date_released: String,
-    // pub number_of_downloads: u32,
-    // pub summary: String,
-    // pub versions: Vec<Version>,
-    // pub categories: Vec<String>,
-    // pub source: String,
+    pub url: String,
+    pub date_released: String,
+    pub number_of_downloads: u32,
+    pub summary: String,
+    pub versions: Vec<Version>,
+    pub categories: Vec<String>,
+    pub source: String,
 }
 #[async_trait]
 pub trait Source {
