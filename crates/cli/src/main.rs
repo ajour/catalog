@@ -13,8 +13,14 @@ async fn handle_opts() -> Result<(), Error> {
     match opts.command {
         Command::Catalog => {
             let tuk = Tukui {};
-            let addons = tuk.get_addons(Flavor::ClassicTbc).await?;
-            dbg!("tukui addons: {}", addons);
+            match tuk.get_addons(Flavor::Retail).await {
+                Ok(addons) => {
+                    println!("{:?}", addons);
+                }
+                Err(e) => {
+                    println!("Error: {:?}", e);
+                }
+            }
             Ok(())
         }
     }
