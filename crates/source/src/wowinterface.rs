@@ -4,10 +4,11 @@ use isahc::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
 struct Package {
     id: i32,
     #[serde(deserialize_with = "null_to_default::deserialize")]
-    category_id: Option<i32>,
+    category_id: i32,
     version: String,
     last_update: u64,
     title: String,
