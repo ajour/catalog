@@ -24,7 +24,6 @@ impl From<(Package, Flavor)> for Addon {
     }
 }
 
-// TODO (casperstorm): handle null deserialization.
 #[derive(Deserialize, Serialize, Clone, Debug)]
 struct Package {
     #[serde(deserialize_with = "number_and_string_to_i32::deserialize")]

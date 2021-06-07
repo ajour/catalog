@@ -2,6 +2,7 @@ use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 
 pub mod tukui;
+pub mod wowinterface;
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
 pub enum Flavor {
