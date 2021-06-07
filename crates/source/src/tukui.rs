@@ -1,13 +1,8 @@
 use super::*;
 use async_trait::async_trait;
+use futures::try_join;
 use isahc::prelude::*;
 use serde::{Deserialize, Serialize};
-
-// TODO (casperstorm):
-// 1. tukui and elvui addons is located at for retail:
-// endpoint?ui=elvui"
-// endpoint?ui=tukui"
-// This is currently not handled.
 
 impl From<(Package, Flavor)> for Addon {
     fn from(pair: (Package, Flavor)) -> Self {
@@ -16,12 +11,12 @@ impl From<(Package, Flavor)> for Addon {
             id: package.id,
             name: package.name,
             url: package.web_url,
-            date_released: package.lastupdate,
             number_of_downloads: package.downloads,
             summary: package.small_desc,
             versions: vec![Version {
                 flavor,
                 game_version: package.patch,
+                date: package.lastupdate,
             }],
             categories: vec![package.category],
             source: "tukui".to_owned(),
@@ -92,15 +87,29 @@ fn endpoint_for_elvui() -> String {
 impl Source for Tukui {
     async fn get_addons(&self, flavor: Flavor) -> Result<Vec<Addon>, Error> {
         let packages = match flavor.base_flavor() {
+            // When fetching retail AddOns, we have to get the two main addons;
+            // Elvui & Tukui from two seperate endpoints, and then combine with
+            // the rest.
             Flavor::Retail => {
-                let mut response = isahc::get_async(endpoint_for_elvui()).await?;
-                let package = response.json::<Package>().await?;
-                let mut packages = Vec::new();
-                packages.push(package);
+                let elv_res_future = isahc::get_async(endpoint_for_elvui());
+                let tuk_res_future = isahc::get_async(endpoint_for_tukui());
+                let all_res_future = isahc::get_async(endpoint_for_addons(&flavor));
 
-                packages
-                // let mut response = isahc::get_async(endpoint_for_addons(&flavor)).await?;
-                // response.json::<Vec<Package>>().await?
+                let (mut elv_res, mut tuk_res, mut all_res) =
+                    try_join!(elv_res_future, tuk_res_future, all_res_future)?;
+
+                let elv_json_future = elv_res.json::<Package>();
+                let tuk_json_future = tuk_res.json::<Package>();
+                let all_json_future = all_res.json::<Vec<Package>>();
+
+                let (elv_package, tuk_package, all_packages) =
+                    try_join!(elv_json_future, tuk_json_future, all_json_future)?;
+
+                let mut concatenated = all_packages;
+                concatenated.push(elv_package);
+                concatenated.push(tuk_package);
+
+                concatenated
             }
             _ => {
                 let mut response = isahc::get_async(endpoint_for_addons(&flavor)).await?;

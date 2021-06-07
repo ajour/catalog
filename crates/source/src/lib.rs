@@ -47,13 +47,13 @@ impl Flavor {
 pub struct Version {
     pub flavor: Flavor,
     pub game_version: String,
+    pub date: String,
 }
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Addon {
     pub id: i32,
     pub name: String,
     pub url: String,
-    pub date_released: String,
     pub number_of_downloads: u64,
     pub summary: String,
     pub versions: Vec<Version>,
