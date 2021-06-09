@@ -15,6 +15,7 @@ impl From<Package> for Addon {
             name: package.title,
             url: package.file_info_uri,
             number_of_downloads: package.downloads,
+            // Currently API does not send any description.
             summary: "".to_owned(),
             versions: vec![Version {
                 flavor,
@@ -92,25 +93,6 @@ fn extract_version_for_flavor(flavor: Flavor, versions: Vec<String>) -> Option<S
 /// Returns category name as `String` for given category id `i32`.
 fn category_name_for_category_id(id: i32) -> Option<String> {
     let category_name = match id {
-        100 => "Mini Games, ROFL",
-        108 => "Data Broker",
-        109 => "Info, Plug-in Bars",
-        111 => "Other",
-        112 => "Casting Bars, Cooldowns",
-        113 => "Suites",
-        114 => "RolePlay, Music Mods",
-        146 => "Mounts & Pets",
-        147 => "UI Media",
-        149 => "DPS",
-        150 => "Healers",
-        151 => "Death Knight",
-        152 => "Monk",
-        153 => "Tanks",
-        154 => "Utility Mods",
-        155 => "Garrisons",
-        157 => "Demon Hunter",
-        160 => "Classic",
-        161 => "The Burning Crusade Classic",
         17 => "Graphic UI Mods",
         18 => "Character Advancement",
         19 => "Action Bar Mods",
@@ -144,6 +126,25 @@ fn category_name_for_category_id(id: i32) -> Option<String> {
         97 => "Mail",
         98 => "ToolTip",
         99 => "Titan Panel",
+        100 => "Mini Games, ROFL",
+        108 => "Data Broker",
+        109 => "Info, Plug-in Bars",
+        111 => "Other",
+        112 => "Casting Bars, Cooldowns",
+        113 => "Suites",
+        114 => "RolePlay, Music Mods",
+        146 => "Mounts & Pets",
+        147 => "UI Media",
+        149 => "DPS",
+        150 => "Healers",
+        151 => "Death Knight",
+        152 => "Monk",
+        153 => "Tanks",
+        154 => "Utility Mods",
+        155 => "Garrisons",
+        157 => "Demon Hunter",
+        160 => "Classic",
+        161 => "The Burning Crusade Classic",
         _ => "",
     };
 
@@ -166,5 +167,31 @@ impl Source for WoWInterface {
             .map(|package| Addon::from(package))
             .collect::<Vec<Addon>>();
         Ok(addons)
+    }
+}
+
+#[test]
+fn test_null_fields() {
+    let tests = [
+        r"[]",
+        r#"[{
+            "id": 38,
+            "categoryId": null,
+            "version": "9.0.5.7",
+            "lastUpdate": 1622059572000,
+            "title": "Foo",
+            "author": "Bar",
+            "fileInfoUri": "",
+            "downloads": 593294,
+            "downloadsMonthly": 128,
+            "favorites": 689,
+            "gameVersions": [],
+            "checksum": "",
+            "addons": null
+        }]"#,
+    ];
+
+    for test in tests.iter() {
+        serde_json::from_str::<Vec<Package>>(test).unwrap();
     }
 }

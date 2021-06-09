@@ -1,15 +1,23 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 
+pub mod townlong_yak;
 pub mod tukui;
 pub mod wowinterface;
 
-#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize, Hash, PartialOrd, Ord)]
 pub enum Flavor {
+    #[serde(alias = "retail", alias = "wow_retail")]
     Retail,
     RetailPtr,
     RetailBeta,
+    #[serde(alias = "classic", alias = "wow_classic", alias = "classic_era")]
     ClassicEra,
+    #[serde(
+        alias = "wow_burning_crusade",
+        alias = "burningCrusade",
+        alias = "burning_crusade"
+    )]
     ClassicTbc,
     ClassicPtr,
     ClassicBeta,
@@ -50,6 +58,7 @@ pub struct Version {
     pub game_version: Option<String>,
     pub date: String,
 }
+
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Addon {
     pub id: i32,
@@ -61,6 +70,7 @@ pub struct Addon {
     pub categories: Vec<String>,
     pub source: String,
 }
+
 #[async_trait]
 pub trait Source {
     async fn get_addons(&self) -> Result<Vec<Addon>, Error>;

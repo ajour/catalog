@@ -1,4 +1,5 @@
 use futures::executor::block_on;
+use source::townlong_yak::TownlongYak;
 use source::tukui::Tukui;
 use source::wowinterface::WoWInterface;
 use source::{Error, Flavor, Source};
@@ -13,8 +14,8 @@ async fn handle_opts() -> Result<(), Error> {
     let opts = Opts::from_args();
     match opts.command {
         Command::Catalog => {
-            let wowi = WoWInterface {};
-            match wowi.get_addons().await {
+            let townlong_yak = TownlongYak {};
+            match townlong_yak.get_addons().await {
                 Ok(addons) => {
                     println!("{:?}", addons);
                 }
@@ -22,6 +23,15 @@ async fn handle_opts() -> Result<(), Error> {
                     println!("Error: {:?}", e);
                 }
             }
+            // let wowi = WoWInterface {};
+            // match wowi.get_addons().await {
+            //     Ok(addons) => {
+            //         println!("{:?}", addons);
+            //     }
+            //     Err(e) => {
+            //         println!("Error: {:?}", e);
+            //     }
+            // }
             // let tuk = Tukui {};
             // match tuk.get_addons(Flavor::Retail).await {
             //     Ok(addons) => {
