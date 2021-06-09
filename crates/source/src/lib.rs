@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 pub mod tukui;
 pub mod wowinterface;
 
-#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq)]
 pub enum Flavor {
     Retail,
     RetailPtr,
@@ -47,7 +47,7 @@ impl Flavor {
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Version {
     pub flavor: Flavor,
-    pub game_version: String,
+    pub game_version: Option<String>,
     pub date: String,
 }
 #[derive(Deserialize, Serialize, Clone, Debug)]
@@ -63,7 +63,7 @@ pub struct Addon {
 }
 #[async_trait]
 pub trait Source {
-    async fn get_addons(&self, flavor: Flavor) -> Result<Vec<Addon>, Error>;
+    async fn get_addons(&self) -> Result<Vec<Addon>, Error>;
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -115,6 +115,20 @@ pub mod number_and_string_to_u64 {
             serde_json::Value::String(s) => s.parse().map_err(de::Error::custom)?,
             serde_json::Value::Number(num) => {
                 num.as_u64().ok_or(de::Error::custom("Invalid number"))?
+            }
+            _ => return Err(de::Error::custom("wrong type")),
+        })
+    }
+}
+
+pub mod u64_to_string {
+    use serde::{self, de, Deserialize, Deserializer};
+
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<String, D::Error> {
+        Ok(match serde_json::Value::deserialize(deserializer)? {
+            serde_json::Value::Number(num) => {
+                let num = num.as_u64().ok_or(de::Error::custom("Invalid number"))?;
+                num.to_string()
             }
             _ => return Err(de::Error::custom("wrong type")),
         })

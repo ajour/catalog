@@ -14,7 +14,7 @@ async fn handle_opts() -> Result<(), Error> {
     match opts.command {
         Command::Catalog => {
             let wowi = WoWInterface {};
-            match wowi.get_addons(Flavor::Retail).await {
+            match wowi.get_addons().await {
                 Ok(addons) => {
                     println!("{:?}", addons);
                 }
