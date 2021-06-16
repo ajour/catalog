@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 
+pub mod curse;
 pub mod townlong_yak;
 pub mod tukui;
 pub mod wowinterface;
@@ -109,7 +110,9 @@ pub mod number_and_string_to_i32 {
         Ok(match serde_json::Value::deserialize(deserializer)? {
             serde_json::Value::String(s) => s.parse().map_err(de::Error::custom)?,
             serde_json::Value::Number(num) => {
-                let num = num.as_i64().ok_or(de::Error::custom("Invalid number"))?;
+                let num = num
+                    .as_i64()
+                    .ok_or(de::Error::custom(format!("invalid number: {}", num)))?;
                 i32::try_from(num).ok().unwrap_or(0)
             }
             _ => return Err(de::Error::custom("wrong type")),
@@ -123,9 +126,9 @@ pub mod number_and_string_to_u64 {
     pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<u64, D::Error> {
         Ok(match serde_json::Value::deserialize(deserializer)? {
             serde_json::Value::String(s) => s.parse().map_err(de::Error::custom)?,
-            serde_json::Value::Number(num) => {
-                num.as_u64().ok_or(de::Error::custom("Invalid number"))?
-            }
+            serde_json::Value::Number(num) => num
+                .as_u64()
+                .ok_or(de::Error::custom(format!("Invalid number: {}", num)))?,
             _ => return Err(de::Error::custom("wrong type")),
         })
     }
@@ -137,7 +140,9 @@ pub mod u64_to_string {
     pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<String, D::Error> {
         Ok(match serde_json::Value::deserialize(deserializer)? {
             serde_json::Value::Number(num) => {
-                let num = num.as_u64().ok_or(de::Error::custom("Invalid number"))?;
+                let num = num
+                    .as_u64()
+                    .ok_or(de::Error::custom(format!("invalid number: {}", num)))?;
                 num.to_string()
             }
             _ => return Err(de::Error::custom("wrong type")),

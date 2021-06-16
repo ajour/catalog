@@ -1,4 +1,5 @@
 use futures::executor::block_on;
+use source::curse::Curse;
 use source::townlong_yak::TownlongYak;
 use source::tukui::Tukui;
 use source::wowinterface::WoWInterface;
@@ -14,15 +15,24 @@ async fn handle_opts() -> Result<(), Error> {
     let opts = Opts::from_args();
     match opts.command {
         Command::Catalog => {
-            let townlong_yak = TownlongYak {};
-            match townlong_yak.get_addons().await {
+            let curse = Curse {};
+            match curse.get_addons().await {
                 Ok(addons) => {
-                    println!("{:?}", addons);
+                    println!("we have {:?} addons.", addons.len());
                 }
                 Err(e) => {
                     println!("Error: {:?}", e);
                 }
             }
+            // let townlong_yak = TownlongYak {};
+            // match townlong_yak.get_addons().await {
+            //     Ok(addons) => {
+            //         println!("{:?}", addons);
+            //     }
+            //     Err(e) => {
+            //         println!("Error: {:?}", e);
+            //     }
+            // }
             // let wowi = WoWInterface {};
             // match wowi.get_addons().await {
             //     Ok(addons) => {
