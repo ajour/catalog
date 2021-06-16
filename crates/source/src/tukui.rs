@@ -54,8 +54,8 @@ struct Package {
 
 pub struct Tukui {}
 
-fn base_endpoint() -> String {
-    "https://www.tukui.org/api.php".to_owned()
+fn base_endpoint<'a>() -> &'a str {
+    "https://www.tukui.org/api.php"
 }
 
 fn endpoint_for_addons(flavor: &Flavor) -> String {

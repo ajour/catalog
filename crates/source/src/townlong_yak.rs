@@ -81,8 +81,8 @@ struct Package {
 
 pub struct TownlongYak {}
 
-fn base_endpoint() -> String {
-    "https://hub.wowup.io/addons/author/foxlit".to_owned()
+fn base_endpoint<'a>() -> &'a str {
+    "https://hub.wowup.io/addons/author/foxlit"
 }
 
 #[async_trait]
@@ -93,7 +93,7 @@ impl Source for TownlongYak {
         let addons = container
             .addons
             .into_iter()
-            .map(|package| Addon::from(package))
+            .map(Addon::from)
             .collect::<Vec<Addon>>();
         Ok(addons)
     }

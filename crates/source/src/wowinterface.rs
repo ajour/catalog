@@ -45,8 +45,8 @@ struct Package {
     game_versions: Vec<String>,
 }
 
-fn base_endpoint() -> String {
-    "https://api.mmoui.com/v4/game/WOW/filelist.json".to_owned()
+fn base_endpoint<'a>() -> &'a str {
+    "https://api.mmoui.com/v4/game/WOW/filelist.json"
 }
 
 /// Returns `Flavor` for a category id `i32`.
@@ -164,7 +164,7 @@ impl Source for WoWInterface {
         let packages = response.json::<Vec<Package>>().await?;
         let addons = packages
             .into_iter()
-            .map(|package| Addon::from(package))
+            .map(Addon::from)
             .collect::<Vec<Addon>>();
         Ok(addons)
     }

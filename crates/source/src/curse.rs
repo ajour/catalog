@@ -18,16 +18,16 @@ impl From<Package> for Addon {
         let versions = package
             .latest_files
             .into_iter()
-            .map(|f| Version::from(f))
-            .collect::<Vec<Version>>();
+            .map(Version::from)
+            .collect();
         Addon {
             id: package.id,
             name: package.name,
             url: package.website_url,
             number_of_downloads: package.download_count.round() as u64,
             summary: package.summary,
-            versions: versions,
-            categories: vec![],
+            versions,
+            categories: package.categories.into_iter().map(|c| c.name).collect(),
             source: "curse".to_owned(),
         }
     }
@@ -83,12 +83,12 @@ impl Source for Curse {
             let packages = response.json::<Vec<Package>>().await?;
             let partials_addons = packages
                 .into_iter()
-                .map(|package| Addon::from(package))
+                .map(Addon::from)
                 .collect::<Vec<Addon>>();
 
             addons.extend_from_slice(&partials_addons);
             number_of_addons = partials_addons.len();
-            index = index + page_size;
+            index += page_size;
         }
 
         Ok(addons)
