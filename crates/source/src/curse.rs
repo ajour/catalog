@@ -74,7 +74,7 @@ fn base_endpoint(page_size: usize, index: usize) -> String {
 impl Source for Curse {
     async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
         let mut index: usize = 0;
-        let page_size: usize = 500;
+        let page_size: usize = 50;
         let mut number_of_addons = page_size;
         let mut addons: Vec<Addon> = vec![];
         while page_size == number_of_addons {
