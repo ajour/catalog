@@ -1,9 +1,8 @@
 use futures::executor::block_on;
 use source::curse::Curse;
-use source::townlong_yak::TownlongYak;
 use source::tukui::Tukui;
 use source::wowinterface::WoWInterface;
-use source::{Error, Flavor, Source};
+use source::{Error, Source};
 use std::fs::File;
 use std::io::Write;
 use structopt::StructOpt;
@@ -19,8 +18,9 @@ async fn handle_opts() -> Result<(), Error> {
         Command::Catalog => {
             let tukui_addons = Tukui {}.get_addons().await?;
             let wowi_addons = WoWInterface {}.get_addons().await?;
+            let curse_addons = Curse {}.get_addons().await?;
             // Combine all addons.
-            let concatenated = [&tukui_addons[..], &wowi_addons[..]].concat();
+            let concatenated = [&tukui_addons[..], &wowi_addons[..], &curse_addons[..]].concat();
             // Serialize.
             let json = serde_json::to_string(&concatenated)?;
             // Create catalog file.
