@@ -7,6 +7,8 @@ use std::fs::File;
 use std::io::Write;
 use structopt::StructOpt;
 
+const VERSION: Option<&'static str> = option_env!("CARGO_PKG_VERSION");
+
 fn main() {
     let future = handle_opts();
     let _ = block_on(future);
@@ -24,7 +26,8 @@ async fn handle_opts() -> Result<(), Error> {
             // Serialize.
             let json = serde_json::to_string(&concatenated)?;
             // Create catalog file.
-            let mut file = File::create("catalog.json")?;
+            let file_name = format!("catalog-{}.json", VERSION.expect("no version was found"));
+            let mut file = File::create(file_name)?;
             // Write to file.
             file.write_all(json.as_bytes())?;
             Ok(())
