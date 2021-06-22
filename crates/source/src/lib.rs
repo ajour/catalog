@@ -85,6 +85,8 @@ pub enum Error {
     Http(#[from] isahc::http::Error),
     #[error(transparent)]
     SerdeJson(#[from] serde_json::Error),
+    #[error(transparent)]
+    Io(#[from] std::io::Error),
     #[error("unknown error")]
     Unknown,
 }

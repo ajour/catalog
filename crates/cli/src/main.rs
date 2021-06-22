@@ -4,6 +4,8 @@ use source::townlong_yak::TownlongYak;
 use source::tukui::Tukui;
 use source::wowinterface::WoWInterface;
 use source::{Error, Flavor, Source};
+use std::fs::File;
+use std::io::Write;
 use structopt::StructOpt;
 
 fn main() {
@@ -15,42 +17,16 @@ async fn handle_opts() -> Result<(), Error> {
     let opts = Opts::from_args();
     match opts.command {
         Command::Catalog => {
-            let curse = Curse {};
-            match curse.get_addons().await {
-                Ok(addons) => {
-                    println!("we have {:?} addons.", addons.len());
-                }
-                Err(e) => {
-                    println!("Error: {:?}", e);
-                }
-            }
-            // let townlong_yak = TownlongYak {};
-            // match townlong_yak.get_addons().await {
-            //     Ok(addons) => {
-            //         println!("{:?}", addons);
-            //     }
-            //     Err(e) => {
-            //         println!("Error: {:?}", e);
-            //     }
-            // }
-            // let wowi = WoWInterface {};
-            // match wowi.get_addons().await {
-            //     Ok(addons) => {
-            //         println!("{:?}", addons);
-            //     }
-            //     Err(e) => {
-            //         println!("Error: {:?}", e);
-            //     }
-            // }
-            // let tuk = Tukui {};
-            // match tuk.get_addons(Flavor::Retail).await {
-            //     Ok(addons) => {
-            //         println!("{:?}", addons);
-            //     }
-            //     Err(e) => {
-            //         println!("Error: {:?}", e);
-            //     }
-            // }
+            let tukui_addons = Tukui {}.get_addons().await?;
+            let wowi_addons = WoWInterface {}.get_addons().await?;
+            // Combine all addons.
+            let concatenated = [&tukui_addons[..], &wowi_addons[..]].concat();
+            // Serialize.
+            let json = serde_json::to_string(&concatenated)?;
+            // Create catalog file.
+            let mut file = File::create("catalog.json")?;
+            // Write to file.
+            file.write_all(json.as_bytes())?;
             Ok(())
         }
     }
