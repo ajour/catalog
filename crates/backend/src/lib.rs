@@ -6,6 +6,26 @@ pub mod townlong_yak;
 pub mod tukui;
 pub mod wowinterface;
 
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Source {
+    Curse,
+    Tukui,
+    WowI,
+    TownlongYak,
+}
+
+impl std::fmt::Display for Source {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            Source::Curse => "Curse",
+            Source::Tukui => "Tukui",
+            Source::WowI => "WowInterface",
+            Source::TownlongYak => "TownlongYak",
+        };
+        write!(f, "{}", s)
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize, Hash, PartialOrd, Ord)]
 pub enum Flavor {
     #[serde(alias = "retail", alias = "wow_retail")]
@@ -69,11 +89,11 @@ pub struct Addon {
     pub summary: String,
     pub versions: Vec<Version>,
     pub categories: Vec<String>,
-    pub source: String,
+    pub source: Source,
 }
 
 #[async_trait]
-pub trait Source {
+pub trait Backend {
     async fn get_addons(&self) -> Result<Vec<Addon>, Error>;
 }
 

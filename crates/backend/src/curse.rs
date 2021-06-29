@@ -28,7 +28,7 @@ impl From<Package> for Addon {
             summary: package.summary,
             versions,
             categories: package.categories.into_iter().map(|c| c.name).collect(),
-            source: "curse".to_owned(),
+            source: Source::Curse,
         }
     }
 }
@@ -71,7 +71,7 @@ fn base_endpoint(page_size: usize, index: usize) -> String {
 }
 
 #[async_trait]
-impl Source for Curse {
+impl Backend for Curse {
     async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
         let mut index: usize = 0;
         let page_size: usize = 50;

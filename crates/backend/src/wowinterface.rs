@@ -23,7 +23,7 @@ impl From<Package> for Addon {
                 date: package.last_update,
             }],
             categories,
-            source: "tukui".to_owned(),
+            source: Source::Tukui,
         }
     }
 }
@@ -158,7 +158,7 @@ fn category_name_for_category_id(id: i32) -> Option<String> {
 pub struct WoWInterface {}
 
 #[async_trait]
-impl Source for WoWInterface {
+impl Backend for WoWInterface {
     async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
         let mut response = isahc::get_async(base_endpoint()).await?;
         let packages = response.json::<Vec<Package>>().await?;

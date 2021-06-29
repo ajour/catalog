@@ -38,7 +38,7 @@ impl From<Package> for Addon {
             summary,
             versions,
             categories: vec![],
-            source: "townlong-yak".to_owned(),
+            source: Source::TownlongYak,
         }
     }
 }
@@ -86,7 +86,7 @@ fn base_endpoint<'a>() -> &'a str {
 }
 
 #[async_trait]
-impl Source for TownlongYak {
+impl Backend for TownlongYak {
     async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
         let mut response = isahc::get_async(base_endpoint()).await?;
         let container = response.json::<Container>().await?;

@@ -1,8 +1,8 @@
+use backend::curse::Curse;
+use backend::tukui::Tukui;
+use backend::wowinterface::WoWInterface;
+use backend::{Backend, Error};
 use futures::executor::block_on;
-use source::curse::Curse;
-use source::tukui::Tukui;
-use source::wowinterface::WoWInterface;
-use source::{Error, Source};
 use std::fs::File;
 use std::io::Write;
 use structopt::StructOpt;

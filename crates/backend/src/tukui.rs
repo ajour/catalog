@@ -19,7 +19,7 @@ impl From<(Package, Flavor)> for Addon {
                 date: package.lastupdate,
             }],
             categories: vec![package.category],
-            source: "tukui".to_owned(),
+            source: Source::Tukui,
         }
     }
 }
@@ -83,7 +83,7 @@ fn endpoint_for_elvui() -> String {
 }
 
 #[async_trait]
-impl Source for Tukui {
+impl Backend for Tukui {
     async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
         let flavors = vec![Flavor::Retail, Flavor::ClassicEra, Flavor::ClassicTbc];
         let mut addons: Vec<Addon> = vec![];

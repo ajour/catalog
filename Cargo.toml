@@ -8,7 +8,7 @@ edition = "2018"
 members = [
     ".",
     "crates/cli",
-    "crates/source"
+    "crates/backend"
 ]
 
 [dependencies]
