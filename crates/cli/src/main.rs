@@ -1,4 +1,5 @@
 use backend::curse::Curse;
+use backend::townlong_yak::TownlongYak;
 use backend::tukui::Tukui;
 use backend::wowinterface::WoWInterface;
 use backend::{Backend, Error};
@@ -21,8 +22,15 @@ async fn handle_opts() -> Result<(), Error> {
             let tukui_addons = Tukui {}.get_addons().await?;
             let wowi_addons = WoWInterface {}.get_addons().await?;
             let curse_addons = Curse {}.get_addons().await?;
+            let tly_addons = TownlongYak {}.get_addons().await?;
             // Combine all addons.
-            let concatenated = [&tukui_addons[..], &wowi_addons[..], &curse_addons[..]].concat();
+            let concatenated = [
+                &tukui_addons[..],
+                &wowi_addons[..],
+                &curse_addons[..],
+                &tly_addons[..],
+            ]
+            .concat();
             // Serialize.
             let json = serde_json::to_string(&concatenated)?;
             // Create catalog file.
