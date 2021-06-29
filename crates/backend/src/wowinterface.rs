@@ -23,7 +23,7 @@ impl From<Package> for Addon {
                 date: package.last_update,
             }],
             categories,
-            source: Source::Tukui,
+            source: Source::WowI,
         }
     }
 }
