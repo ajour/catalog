@@ -65,8 +65,8 @@ fn flavor_for_category_id(id: i32) -> Flavor {
 /// Eg. `"9.0.5" => Flavor::Retail`
 fn guess_flavor_from_version(version: &str) -> Option<Flavor> {
     match version.chars().next() {
-        // 9.x.x
-        Some('9') => Some(Flavor::Retail),
+        // 9.x.x, 8.x.x, 7.x.x
+        Some('9' | '8' | '7') => Some(Flavor::Retail),
         // 1.x.x
         Some('1') => Some(Flavor::ClassicEra),
         // 2.x.x
