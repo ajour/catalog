@@ -18,6 +18,7 @@ impl From<Package> for Addon {
         let versions = package
             .latest_files
             .into_iter()
+            .filter(|f| f.release_type == 1)
             .map(Version::from)
             .collect();
         Addon {
@@ -44,6 +45,7 @@ struct File {
     file_date: String,
     game_version_flavor: Flavor,
     game_version: Vec<String>,
+    release_type: i32,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
