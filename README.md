@@ -7,5 +7,5 @@ This project generates a JSON file which is used in [Ajour](https://github.com/a
 To generate a `catalog.json` file run:
 
 ```rust
-cargo run -p cli -- catalog
+cargo run -- catalog
 ```
