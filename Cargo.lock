@@ -221,6 +221,12 @@ checksum = "631ae5198c9be5e753e5cc215e1bd73c2b466a3565173db433f52bb9d3e66dba"
 [[package]]
 name = "catalog"
 version = "0.1.0"
+dependencies = [
+ "backend",
+ "futures",
+ "serde_json",
+ "structopt",
+]
 
 [[package]]
 name = "cc"
@@ -247,16 +253,6 @@ dependencies = [
  "textwrap",
  "unicode-width",
  "vec_map",
-]
-
-[[package]]
-name = "cli"
-version = "0.1.0"
-dependencies = [
- "backend",
- "futures",
- "serde_json",
- "structopt",
 ]
 
 [[package]]
