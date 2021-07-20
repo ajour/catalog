@@ -1,8 +1,10 @@
-use super::*;
 use async_trait::async_trait;
 use isahc::prelude::*;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+
+use crate::backend::{Addon, Backend, Flavor, Source, Version};
+use crate::error::Error;
 
 impl From<(GameVersion, String)> for Version {
     fn from(pair: (GameVersion, String)) -> Self {

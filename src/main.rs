@@ -1,8 +1,9 @@
-use backend::curse::Curse;
-use backend::townlong_yak::TownlongYak;
-use backend::tukui::Tukui;
-use backend::wowinterface::WoWInterface;
-use backend::{Backend, Error};
+use core::{
+    backend::{
+        curse::Curse, townlong_yak::TownlongYak, tukui::Tukui, wowinterface::WoWInterface, Backend,
+    },
+    error::Error,
+};
 use futures::executor::block_on;
 use std::fs::File;
 use std::io::Write;

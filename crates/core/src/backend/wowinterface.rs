@@ -1,7 +1,10 @@
-use super::*;
 use async_trait::async_trait;
 use isahc::prelude::*;
 use serde::{Deserialize, Serialize};
+
+use crate::backend::{Addon, Backend, Flavor, Source, Version};
+use crate::error::Error;
+use crate::utility::{null_to_default, u64_to_string};
 
 impl From<Package> for Addon {
     fn from(package: Package) -> Self {

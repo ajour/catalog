@@ -1,7 +1,9 @@
-use super::*;
 use async_trait::async_trait;
 use isahc::prelude::*;
 use serde::{Deserialize, Serialize};
+
+use crate::backend::{Addon, Backend, Flavor, Source, Version};
+use crate::error::Error;
 
 impl From<File> for Version {
     fn from(file: File) -> Self {
