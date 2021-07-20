@@ -19,6 +19,7 @@ fn main() {
 async fn handle_opts() -> Result<(), Error> {
     let opts = Opts::from_args();
     match opts.command {
+        // Generate a JSON file with all backend sources combined.
         Command::Catalog => {
             let tukui_addons = Tukui {}.get_addons().await?;
             let wowi_addons = WoWInterface {}.get_addons().await?;

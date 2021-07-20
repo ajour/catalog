@@ -1,3 +1,4 @@
+/// Deserialize a null to default value.
 pub mod null_to_default {
     use serde::{self, Deserialize, Deserializer};
 
@@ -11,6 +12,7 @@ pub mod null_to_default {
     }
 }
 
+/// Deserialize a `Number` and `String` to `i32`.
 pub mod number_and_string_to_i32 {
     use serde::{self, de, Deserialize, Deserializer};
     use std::convert::TryFrom;
@@ -29,6 +31,7 @@ pub mod number_and_string_to_i32 {
     }
 }
 
+/// Deserialize a `Number` and `String` to `u64`.
 pub mod number_and_string_to_u64 {
     use serde::{self, de, Deserialize, Deserializer};
 
@@ -43,6 +46,7 @@ pub mod number_and_string_to_u64 {
     }
 }
 
+/// Deserialize a `u64` value to `String`.
 pub mod u64_to_string {
     use serde::{self, de, Deserialize, Deserializer};
 
