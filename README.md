@@ -1,6 +1,14 @@
 # Ajour Catalog
 
-This project generates a JSON file which is used in [Ajour](https://github.com/ajour/ajour/).
+This repository generates a JSON file which is used in [Ajour](https://github.com/ajour/ajour/).
+The JSON file contains all available addons from:
+
+- Curse
+- Tukui
+- WowInterface
+- Townlong Yak
+
+The JSON file is automatically updated every 6 hour.
 
 ## Usage
 
@@ -9,3 +17,7 @@ To generate a `catalog.json` file run:
 ```rust
 cargo run -- catalog
 ```
+
+## License
+
+Ajour Catalog is released under the [MIT License.](https://github.com/ajour/catalog/blob/main/LICENSE)
