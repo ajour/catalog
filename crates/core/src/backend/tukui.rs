@@ -1,9 +1,8 @@
-use async_trait::async_trait;
 use futures::try_join;
 use isahc::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::backend::{Addon, Backend, Flavor, Source, Version};
+use crate::backend::{Addon, Flavor, Source, Version};
 use crate::error::Error;
 use crate::utility::{null_to_default, number_and_string_to_i32, number_and_string_to_u64};
 
@@ -55,8 +54,6 @@ struct Package {
     web_url: String,
 }
 
-pub struct Tukui {}
-
 fn base_endpoint<'a>() -> &'a str {
     "https://www.tukui.org/api.php"
 }
@@ -85,61 +82,58 @@ fn endpoint_for_elvui() -> String {
     format!("{}?ui=elvui", base_endpoint())
 }
 
-#[async_trait]
-impl Backend for Tukui {
-    async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
-        let flavors = vec![Flavor::Retail, Flavor::ClassicEra, Flavor::ClassicTbc];
-        let mut addons: Vec<Addon> = vec![];
-        for flavor in flavors.iter() {
-            match flavor.base_flavor() {
-                // When fetching retail AddOns, we have to get the two main addons;
-                // Elvui & Tukui from two seperate endpoints, and then combine with
-                // the rest.
-                Flavor::Retail => {
-                    let elv_res_future = isahc::get_async(endpoint_for_elvui());
-                    let tuk_res_future = isahc::get_async(endpoint_for_tukui());
-                    let all_res_future = isahc::get_async(endpoint_for_addons(&flavor));
+pub async fn get_addons() -> Result<Vec<Addon>, Error> {
+    let flavors = vec![Flavor::Retail, Flavor::ClassicEra, Flavor::ClassicTbc];
+    let mut addons: Vec<Addon> = vec![];
+    for flavor in flavors.iter() {
+        match flavor.base_flavor() {
+            // When fetching retail AddOns, we have to get the two main addons;
+            // Elvui & Tukui from two seperate endpoints, and then combine with
+            // the rest.
+            Flavor::Retail => {
+                let elv_res_future = isahc::get_async(endpoint_for_elvui());
+                let tuk_res_future = isahc::get_async(endpoint_for_tukui());
+                let all_res_future = isahc::get_async(endpoint_for_addons(&flavor));
 
-                    let (mut elv_res, mut tuk_res, mut all_res) =
-                        try_join!(elv_res_future, tuk_res_future, all_res_future)?;
+                let (mut elv_res, mut tuk_res, mut all_res) =
+                    try_join!(elv_res_future, tuk_res_future, all_res_future)?;
 
-                    let elv_json_future = elv_res.json::<Package>();
-                    let tuk_json_future = tuk_res.json::<Package>();
-                    let all_json_future = all_res.json::<Vec<Package>>();
+                let elv_json_future = elv_res.json::<Package>();
+                let tuk_json_future = tuk_res.json::<Package>();
+                let all_json_future = all_res.json::<Vec<Package>>();
 
-                    let (elv_package, tuk_package, all_packages) =
-                        try_join!(elv_json_future, tuk_json_future, all_json_future)?;
+                let (elv_package, tuk_package, all_packages) =
+                    try_join!(elv_json_future, tuk_json_future, all_json_future)?;
 
-                    let mut packages = vec![];
-                    packages.extend(all_packages);
-                    packages.push(elv_package);
-                    packages.push(tuk_package);
+                let mut packages = vec![];
+                packages.extend(all_packages);
+                packages.push(elv_package);
+                packages.push(tuk_package);
 
-                    // Extends addons with `Package` converted to `Addon`.
-                    addons.extend(
-                        packages
-                            .into_iter()
-                            .map(|package| Addon::from((package, *flavor)))
-                            .collect::<Vec<Addon>>(),
-                    );
-                }
-                _ => {
-                    let mut response = isahc::get_async(endpoint_for_addons(&flavor)).await?;
-                    let packages = response.json::<Vec<Package>>().await?;
+                // Extends addons with `Package` converted to `Addon`.
+                addons.extend(
+                    packages
+                        .into_iter()
+                        .map(|package| Addon::from((package, *flavor)))
+                        .collect::<Vec<Addon>>(),
+                );
+            }
+            _ => {
+                let mut response = isahc::get_async(endpoint_for_addons(&flavor)).await?;
+                let packages = response.json::<Vec<Package>>().await?;
 
-                    // Extends addons with `Package` converted to `Addon`.
-                    addons.extend(
-                        packages
-                            .into_iter()
-                            .map(|package| Addon::from((package, *flavor)))
-                            .collect::<Vec<Addon>>(),
-                    );
-                }
+                // Extends addons with `Package` converted to `Addon`.
+                addons.extend(
+                    packages
+                        .into_iter()
+                        .map(|package| Addon::from((package, *flavor)))
+                        .collect::<Vec<Addon>>(),
+                );
             }
         }
-
-        Ok(addons)
     }
+
+    Ok(addons)
 }
 
 #[test]

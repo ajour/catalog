@@ -1,9 +1,8 @@
-use async_trait::async_trait;
 use isahc::prelude::*;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::backend::{Addon, Backend, Flavor, Source, Version};
+use crate::backend::{Addon, Flavor, Source, Version};
 use crate::error::Error;
 
 impl From<(GameVersion, String)> for Version {
@@ -81,22 +80,17 @@ struct Package {
     releases: Vec<Release>,
 }
 
-pub struct TownlongYak {}
-
 fn base_endpoint<'a>() -> &'a str {
     "https://hub.wowup.io/addons/author/foxlit"
 }
 
-#[async_trait]
-impl Backend for TownlongYak {
-    async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
-        let mut response = isahc::get_async(base_endpoint()).await?;
-        let container = response.json::<Container>().await?;
-        let addons = container
-            .addons
-            .into_iter()
-            .map(Addon::from)
-            .collect::<Vec<Addon>>();
-        Ok(addons)
-    }
+pub async fn get_addons() -> Result<Vec<Addon>, Error> {
+    let mut response = isahc::get_async(base_endpoint()).await?;
+    let container = response.json::<Container>().await?;
+    let addons = container
+        .addons
+        .into_iter()
+        .map(Addon::from)
+        .collect::<Vec<Addon>>();
+    Ok(addons)
 }

@@ -13,6 +13,18 @@ pub trait Backend {
     async fn get_addons(&self) -> Result<Vec<Addon>, Error>;
 }
 
+#[async_trait]
+impl Backend for Source {
+    async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
+        match self {
+            Source::Curse => curse::get_addons().await,
+            Source::Tukui => tukui::get_addons().await,
+            Source::WowI => wowinterface::get_addons().await,
+            Source::TownlongYak => townlong_yak::get_addons().await,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Source {
     Curse,

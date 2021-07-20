@@ -1,8 +1,7 @@
-use async_trait::async_trait;
 use isahc::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::backend::{Addon, Backend, Flavor, Source, Version};
+use crate::backend::{Addon, Flavor, Source, Version};
 use crate::error::Error;
 use crate::utility::{null_to_default, u64_to_string};
 
@@ -158,19 +157,14 @@ fn category_name_for_category_id(id: i32) -> Option<String> {
     }
 }
 
-pub struct WoWInterface {}
-
-#[async_trait]
-impl Backend for WoWInterface {
-    async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
-        let mut response = isahc::get_async(base_endpoint()).await?;
-        let packages = response.json::<Vec<Package>>().await?;
-        let addons = packages
-            .into_iter()
-            .map(Addon::from)
-            .collect::<Vec<Addon>>();
-        Ok(addons)
-    }
+pub async fn get_addons() -> Result<Vec<Addon>, Error> {
+    let mut response = isahc::get_async(base_endpoint()).await?;
+    let packages = response.json::<Vec<Package>>().await?;
+    let addons = packages
+        .into_iter()
+        .map(Addon::from)
+        .collect::<Vec<Addon>>();
+    Ok(addons)
 }
 
 #[test]

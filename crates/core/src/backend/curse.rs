@@ -1,8 +1,7 @@
-use async_trait::async_trait;
 use isahc::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::backend::{Addon, Backend, Flavor, Source, Version};
+use crate::backend::{Addon, Flavor, Source, Version};
 use crate::error::Error;
 
 impl From<File> for Version {
@@ -65,8 +64,6 @@ struct Package {
     latest_files: Vec<File>,
 }
 
-pub struct Curse {}
-
 fn base_endpoint(page_size: usize, index: usize) -> String {
     format!(
         "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=1&pageSize={}&index={}",
@@ -74,27 +71,24 @@ fn base_endpoint(page_size: usize, index: usize) -> String {
     )
 }
 
-#[async_trait]
-impl Backend for Curse {
-    async fn get_addons(&self) -> Result<Vec<Addon>, Error> {
-        let mut index: usize = 0;
-        let page_size: usize = 50;
-        let mut number_of_addons = page_size;
-        let mut addons: Vec<Addon> = vec![];
-        while page_size == number_of_addons {
-            let endpoint = base_endpoint(page_size, index);
-            let mut response = isahc::get_async(endpoint).await?;
-            let packages = response.json::<Vec<Package>>().await?;
-            let partials_addons = packages
-                .into_iter()
-                .map(Addon::from)
-                .collect::<Vec<Addon>>();
+pub async fn get_addons() -> Result<Vec<Addon>, Error> {
+    let mut index: usize = 0;
+    let page_size: usize = 50;
+    let mut number_of_addons = page_size;
+    let mut addons: Vec<Addon> = vec![];
+    while page_size == number_of_addons {
+        let endpoint = base_endpoint(page_size, index);
+        let mut response = isahc::get_async(endpoint).await?;
+        let packages = response.json::<Vec<Package>>().await?;
+        let partials_addons = packages
+            .into_iter()
+            .map(Addon::from)
+            .collect::<Vec<Addon>>();
 
-            addons.extend_from_slice(&partials_addons);
-            number_of_addons = partials_addons.len();
-            index += page_size;
-        }
-
-        Ok(addons)
+        addons.extend_from_slice(&partials_addons);
+        number_of_addons = partials_addons.len();
+        index += page_size;
     }
+
+    Ok(addons)
 }

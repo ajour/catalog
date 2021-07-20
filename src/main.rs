@@ -1,10 +1,8 @@
 use core::{
-    backend::{
-        curse::Curse, townlong_yak::TownlongYak, tukui::Tukui, wowinterface::WoWInterface, Backend,
-    },
+    backend::{Backend, Source::*},
     error::Error,
 };
-use futures::executor::block_on;
+use futures::{executor::block_on, try_join};
 use std::fs::File;
 use std::io::Write;
 use structopt::StructOpt;
@@ -21,18 +19,14 @@ async fn handle_opts() -> Result<(), Error> {
     match opts.command {
         // Generate a JSON file with all backend sources combined.
         Command::Catalog => {
-            let tukui_addons = Tukui {}.get_addons().await?;
-            let wowi_addons = WoWInterface {}.get_addons().await?;
-            let curse_addons = Curse {}.get_addons().await?;
-            let tly_addons = TownlongYak {}.get_addons().await?;
+            let (tukui, wowi, curse, townlong_yak) = try_join!(
+                Tukui.get_addons(),
+                WowI.get_addons(),
+                Curse.get_addons(),
+                TownlongYak.get_addons()
+            )?;
             // Combine all addons.
-            let concatenated = [
-                &tukui_addons[..],
-                &wowi_addons[..],
-                &curse_addons[..],
-                &tly_addons[..],
-            ]
-            .concat();
+            let concatenated = [&tukui[..], &wowi[..], &curse[..], &townlong_yak[..]].concat();
             // Serialize.
             let json = serde_json::to_string(&concatenated)?;
             // Create catalog file.
