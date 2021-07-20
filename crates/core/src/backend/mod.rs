@@ -7,6 +7,7 @@ pub mod curse;
 pub mod townlong_yak;
 pub mod tukui;
 pub mod wowinterface;
+pub mod wowup_hub;
 
 #[async_trait]
 pub trait Backend {
@@ -21,6 +22,7 @@ impl Backend for Source {
             Source::Tukui => tukui::get_addons().await,
             Source::WowI => wowinterface::get_addons().await,
             Source::TownlongYak => townlong_yak::get_addons().await,
+            Source::WowUpHub => wowup_hub::get_addons().await,
         }
     }
 }
@@ -31,6 +33,7 @@ pub enum Source {
     Tukui,
     WowI,
     TownlongYak,
+    WowUpHub,
 }
 
 impl std::fmt::Display for Source {
@@ -40,6 +43,7 @@ impl std::fmt::Display for Source {
             Source::Tukui => "Tukui",
             Source::WowI => "WowInterface",
             Source::TownlongYak => "TownlongYak",
+            Source::WowUpHub => "Hub",
         };
         write!(f, "{}", s)
     }
