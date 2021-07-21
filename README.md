@@ -20,4 +20,4 @@ cargo run -- catalog
 
 ## License
 
-Ajour Catalog is released under the [MIT License.](https://github.com/ajour/catalog/blob/main/LICENSE)
+Ajour Catalog is released under the [GPL-3.0 License.](https://github.com/ajour/catalog/blob/main/LICENSE)
