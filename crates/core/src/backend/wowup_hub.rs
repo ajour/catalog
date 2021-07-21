@@ -39,7 +39,7 @@ impl From<Package> for Addon {
             summary,
             versions,
             categories: vec![],
-            source: Source::TownlongYak,
+            source: Source::WowUpHub,
         }
     }
 }
@@ -69,7 +69,6 @@ struct Package {
     id: i32,
     repository: String,
     repository_name: String,
-    // TODO: This is too long, lets just cut it down.
     description: String,
     total_download_count: u64,
     releases: Vec<Release>,
