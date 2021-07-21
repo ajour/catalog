@@ -36,19 +36,6 @@ pub enum Source {
     WowUpHub,
 }
 
-impl std::fmt::Display for Source {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let s = match self {
-            Source::Curse => "Curse",
-            Source::Tukui => "Tukui",
-            Source::WowI => "WowInterface",
-            Source::TownlongYak => "TownlongYak",
-            Source::WowUpHub => "Hub",
-        };
-        write!(f, "{}", s)
-    }
-}
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize, Hash, PartialOrd, Ord)]
 pub enum Flavor {
     #[serde(alias = "retail", alias = "wow_retail")]

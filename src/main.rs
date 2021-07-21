@@ -19,11 +19,11 @@ async fn handle_opts() -> Result<(), Error> {
     match opts.command {
         // Generate a JSON file with all backend sources combined.
         Command::Catalog => {
-            let (tukui, wowi, curse, townlong_yak, wowup_hub) = try_join!(
+            let (tukui, wowi, curse, wowup_hub) = try_join!(
                 Tukui.get_addons(),
                 WowI.get_addons(),
                 Curse.get_addons(),
-                TownlongYak.get_addons(),
+                // TownlongYak.get_addons(),
                 WowUpHub.get_addons()
             )?;
             // Combine all addons.
@@ -31,7 +31,7 @@ async fn handle_opts() -> Result<(), Error> {
                 &tukui[..],
                 &wowi[..],
                 &curse[..],
-                &townlong_yak[..],
+                // &townlong_yak[..],
                 &wowup_hub[..],
             ]
             .concat();
