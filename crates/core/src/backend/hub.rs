@@ -75,7 +75,7 @@ struct Package {
 }
 
 fn base_endpoint<'a>() -> &'a str {
-    "https://hub.wowup.io/addons/featured/retail?count=100"
+    "https://hub.wowup.io/addons/featured/retail?count=1000"
 }
 
 pub async fn get_addons() -> Result<Vec<Addon>, Error> {
