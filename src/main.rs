@@ -19,14 +19,14 @@ async fn handle_opts() -> Result<(), Error> {
     match opts.command {
         // Generate a JSON file with all backend sources combined.
         Command::Catalog => {
-            let (tukui, wowi, curse, wowup_hub) = try_join!(
+            let (tukui, wowi, curse, hub) = try_join!(
                 Tukui.get_addons(),
                 WowI.get_addons(),
                 Curse.get_addons(),
                 Hub.get_addons()
             )?;
             // Combine all addons.
-            let concatenated = [&tukui[..], &wowi[..], &curse[..], &wowup_hub[..]].concat();
+            let concatenated = [&tukui[..], &wowi[..], &curse[..], &hub[..]].concat();
             // Serialize.
             let json = serde_json::to_string(&concatenated)?;
             // Create catalog file.
