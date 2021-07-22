@@ -6,7 +6,7 @@ The JSON file contains all available addons from:
 - Curse
 - Tukui
 - WowInterface
-- Townlong Yak
+- Hub
 
 The JSON file is automatically updated every 6 hour.
 
