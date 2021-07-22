@@ -39,7 +39,7 @@ impl From<Package> for Addon {
             summary,
             versions,
             categories: vec![],
-            source: Source::TownlongYak,
+            source: Source::Hub,
         }
     }
 }
@@ -69,19 +69,13 @@ struct Package {
     id: i32,
     repository: String,
     repository_name: String,
-    source: String,
     description: String,
-    homepage: String,
-    image_url: String,
-    owner_image_url: String,
-    owner_name: String,
     total_download_count: u64,
-    funding_links: Vec<String>,
     releases: Vec<Release>,
 }
 
 fn base_endpoint<'a>() -> &'a str {
-    "https://hub.wowup.io/addons/author/foxlit"
+    "https://hub.wowup.io/addons/featured/retail?count=100"
 }
 
 pub async fn get_addons() -> Result<Vec<Addon>, Error> {

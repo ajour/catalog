@@ -4,10 +4,9 @@ use serde::{Deserialize, Serialize};
 use crate::error::Error;
 
 pub mod curse;
-pub mod townlong_yak;
+pub mod hub;
 pub mod tukui;
 pub mod wowinterface;
-pub mod wowup_hub;
 
 #[async_trait]
 pub trait Backend {
@@ -21,8 +20,7 @@ impl Backend for Source {
             Source::Curse => curse::get_addons().await,
             Source::Tukui => tukui::get_addons().await,
             Source::WowI => wowinterface::get_addons().await,
-            Source::TownlongYak => townlong_yak::get_addons().await,
-            Source::WowUpHub => wowup_hub::get_addons().await,
+            Source::Hub => hub::get_addons().await,
         }
     }
 }
@@ -32,8 +30,7 @@ pub enum Source {
     Curse,
     Tukui,
     WowI,
-    TownlongYak,
-    WowUpHub,
+    Hub,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize, Hash, PartialOrd, Ord)]

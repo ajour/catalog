@@ -23,18 +23,10 @@ async fn handle_opts() -> Result<(), Error> {
                 Tukui.get_addons(),
                 WowI.get_addons(),
                 Curse.get_addons(),
-                // TownlongYak.get_addons(),
-                WowUpHub.get_addons()
+                Hub.get_addons()
             )?;
             // Combine all addons.
-            let concatenated = [
-                &tukui[..],
-                &wowi[..],
-                &curse[..],
-                // &townlong_yak[..],
-                &wowup_hub[..],
-            ]
-            .concat();
+            let concatenated = [&tukui[..], &wowi[..], &curse[..], &wowup_hub[..]].concat();
             // Serialize.
             let json = serde_json::to_string(&concatenated)?;
             // Create catalog file.
