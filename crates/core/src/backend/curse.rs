@@ -19,7 +19,7 @@ impl From<Package> for Addon {
         let versions = package
             .latest_files
             .into_iter()
-            .filter(|f| f.release_type == 1)
+            .filter(|f| f.release_type == 1 || f.release_type == 2)
             .map(Version::from)
             .collect();
         Addon {
