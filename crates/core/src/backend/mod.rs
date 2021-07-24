@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::error::Error;
 
 pub mod curse;
-pub mod townlong_yak;
+pub mod hub;
 pub mod tukui;
 pub mod wowinterface;
 
@@ -20,7 +20,7 @@ impl Backend for Source {
             Source::Curse => curse::get_addons().await,
             Source::Tukui => tukui::get_addons().await,
             Source::WowI => wowinterface::get_addons().await,
-            Source::TownlongYak => townlong_yak::get_addons().await,
+            Source::Hub => hub::get_addons().await,
         }
     }
 }
@@ -30,19 +30,7 @@ pub enum Source {
     Curse,
     Tukui,
     WowI,
-    TownlongYak,
-}
-
-impl std::fmt::Display for Source {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let s = match self {
-            Source::Curse => "Curse",
-            Source::Tukui => "Tukui",
-            Source::WowI => "WowInterface",
-            Source::TownlongYak => "TownlongYak",
-        };
-        write!(f, "{}", s)
-    }
+    Hub,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize, Hash, PartialOrd, Ord)]
