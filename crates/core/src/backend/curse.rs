@@ -16,10 +16,20 @@ impl From<File> for Version {
 
 impl From<Package> for Addon {
     fn from(package: Package) -> Self {
-        let versions = package
+        let files = package
             .latest_files
             .into_iter()
             .filter(|f| f.release_type == 1 || f.release_type == 2)
+            .collect::<Vec<File>>();
+        let files_cloned = files.clone();
+        let versions = files
+            .into_iter()
+            .filter(|f| {
+                // We only want the newest for each flavor.
+                !files_cloned
+                    .iter()
+                    .any(|b| b.game_version_flavor == f.game_version_flavor && b.id > f.id)
+            })
             .map(Version::from)
             .collect();
         Addon {
@@ -43,6 +53,7 @@ struct Category {
 #[derive(Deserialize, Serialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 struct File {
+    id: i32,
     file_date: String,
     game_version_flavor: Flavor,
     game_version: Vec<String>,
