@@ -36,7 +36,7 @@ struct Package {
     id: i32,
     #[serde(deserialize_with = "null_to_default::deserialize")]
     category_id: i32,
-    version: String,
+    version: Option<String>,
     #[serde(deserialize_with = "u64_to_string::deserialize")]
     last_update: String,
     title: String,

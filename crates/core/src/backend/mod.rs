@@ -35,13 +35,20 @@ pub enum Source {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize, Hash, PartialOrd, Ord)]
 pub enum Flavor {
-    #[serde(alias = "retail", alias = "wow_retail")]
+    #[serde(alias = "retail", alias = "wow_retail", alias = "mainline")]
     Retail,
     RetailPtr,
     RetailBeta,
-    #[serde(alias = "classic", alias = "wow_classic", alias = "classic_era")]
+    #[serde(
+        alias = "classic",
+        alias = "wow_classic",
+        alias = "classic_era",
+        alias = "vanilla"
+    )]
     ClassicEra,
     #[serde(
+        alias = "tbc",
+        alias = "bcc",
         alias = "wow_burning_crusade",
         alias = "burningCrusade",
         alias = "burning_crusade"
