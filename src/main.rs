@@ -20,11 +20,11 @@ async fn handle_opts() -> Result<(), Error> {
     match opts.command {
         // Generate a JSON file with all backend sources combined.
         Command::Catalog => {
-            let addons: Vec<Addon> = join_all(
+            let addons = join_all(
                 vec![
+                    // Curse, // Fixme. Temporary disabled
                     Tukui,
                     WowI,
-                    // Curse,
                     Hub
                 ].iter().map(|x| x.get_addons())
             ).await
