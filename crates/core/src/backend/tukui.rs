@@ -86,7 +86,12 @@ fn endpoint_for_elvui() -> String {
 }
 
 pub async fn get_addons() -> Result<Vec<Addon>, Error> {
-    let flavors = vec![Flavor::Retail, Flavor::ClassicEra, Flavor::ClassicTbc, Flavor::ClassicWotlk];
+    let flavors = vec![
+        Flavor::Retail,
+        Flavor::ClassicEra,
+        Flavor::ClassicTbc,
+        Flavor::ClassicWotlk,
+    ];
     let mut addons: Vec<Addon> = vec![];
     for flavor in flavors.iter() {
         match flavor.base_flavor() {

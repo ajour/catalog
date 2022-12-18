@@ -54,9 +54,7 @@ pub enum Flavor {
         alias = "burning_crusade"
     )]
     ClassicTbc,
-    #[serde(
-        alias = "wotlk"
-    )]
+    #[serde(alias = "wotlk")]
     ClassicWotlk,
     ClassicPtr,
     ClassicBeta,
