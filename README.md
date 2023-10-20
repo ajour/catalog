@@ -3,7 +3,7 @@
 This repository generates a JSON file which is used in [Ajour](https://github.com/ajour/ajour/).
 The JSON file contains all available addons from:
 
-- Curse
+- Curse (temporary disabled)
 - Tukui
 - WowInterface
 - Hub

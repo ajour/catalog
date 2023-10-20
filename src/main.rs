@@ -1,8 +1,9 @@
 use core::{
-    backend::{Backend, Source::*},
+    backend::{Addon, Backend, Source::*},
     error::Error,
 };
-use futures::{executor::block_on, try_join};
+use futures::executor::block_on;
+use futures::future::join_all;
 use std::fs::File;
 use std::io::Write;
 use structopt::StructOpt;
@@ -19,16 +20,23 @@ async fn handle_opts() -> Result<(), Error> {
     match opts.command {
         // Generate a JSON file with all backend sources combined.
         Command::Catalog => {
-            let (tukui, wowi, curse, hub) = try_join!(
-                Tukui.get_addons(),
-                WowI.get_addons(),
-                Curse.get_addons(),
-                Hub.get_addons()
-            )?;
-            // Combine all addons.
-            let concatenated = [&tukui[..], &wowi[..], &curse[..], &hub[..]].concat();
+            let addons: Vec<Addon> = join_all(
+                vec![
+                    // Curse, // Disabled. Not working
+                    // Tukui, // Disabled. Not working
+                    WowI,
+                    Hub,
+                ]
+                .iter()
+                .map(|x| x.get_addons()),
+            )
+            .await
+            .into_iter()
+            .map(|x| x.unwrap())
+            .flatten()
+            .collect();
             // Serialize.
-            let json = serde_json::to_string(&concatenated)?;
+            let json = serde_json::to_string(&addons)?;
             // Create catalog file.
             let file_name = format!("catalog-{}.json", VERSION.expect("no version was found"));
             let mut file = File::create(file_name)?;

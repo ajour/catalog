@@ -70,6 +70,9 @@ fn endpoint_for_addons(flavor: &Flavor) -> String {
         Flavor::ClassicTbc => {
             format!("{}?classic-tbc-addons=all", base_endpoint)
         }
+        Flavor::ClassicWotlk => {
+            format!("{}?classic-wotlk-addons=all", base_endpoint)
+        }
         _ => panic!("Unknown base flavor {}", flavor),
     }
 }
@@ -83,7 +86,12 @@ fn endpoint_for_elvui() -> String {
 }
 
 pub async fn get_addons() -> Result<Vec<Addon>, Error> {
-    let flavors = vec![Flavor::Retail, Flavor::ClassicEra, Flavor::ClassicTbc];
+    let flavors = vec![
+        Flavor::Retail,
+        Flavor::ClassicEra,
+        Flavor::ClassicTbc,
+        Flavor::ClassicWotlk,
+    ];
     let mut addons: Vec<Addon> = vec![];
     for flavor in flavors.iter() {
         match flavor.base_flavor() {

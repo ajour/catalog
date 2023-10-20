@@ -58,6 +58,7 @@ fn flavor_for_category_id(id: i32) -> Flavor {
     match id {
         160 => Flavor::ClassicEra,
         161 => Flavor::ClassicTbc,
+        162 => Flavor::ClassicWotlk,
         _ => Flavor::Retail,
     }
 }
@@ -73,6 +74,8 @@ fn guess_flavor_from_version(version: &str) -> Option<Flavor> {
         Some('1') => Some(Flavor::ClassicEra),
         // 2.x.x
         Some('2') => Some(Flavor::ClassicTbc),
+        // 3.x.x
+        Some('3') => Some(Flavor::ClassicWotlk),
         _ => None,
     }
 }
