@@ -7,7 +7,7 @@ name: Create Catalog
 
 jobs:
   fetch:
-    runs-on: ubuntu-20.04 # https://github.com/actions/runner-images/issues/6697
+    runs-on: ubuntu-22.04
     name: Fetch addon data
     steps:
       - uses: actions/checkout@v2

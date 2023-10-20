@@ -22,8 +22,10 @@ async fn handle_opts() -> Result<(), Error> {
         Command::Catalog => {
             let addons: Vec<Addon> = join_all(
                 vec![
-                    // Curse, // Fixme. Temporary disabled
-                    Tukui, WowI, Hub,
+                    // Curse, // Disabled. Not working
+                    // Tukui, // Disabled. Not working
+                    WowI,
+                    Hub,
                 ]
                 .iter()
                 .map(|x| x.get_addons()),
